@@ -26,6 +26,17 @@ open class TweePlaceholderTextField: UITextField {
 	@IBInspectable public var originalPlaceholderFontSize: CGFloat = 17
 	/// Placeholder animation duration.
 	@IBInspectable public var placeholderDuration: Double = 0.5
+    
+    /// Left image icon.
+    @IBInspectable public var leftIcon: UIImage? {
+        get {
+            return leftImageIcon
+        } set {
+            leftImageIcon = newValue ?? UIImage()
+            addLeftIcon()
+        }
+    }
+    
 	/// Color of custom placeholder.
 	@IBInspectable public var placeholderColor: UIColor? {
 		get {
@@ -52,6 +63,9 @@ open class TweePlaceholderTextField: UITextField {
 		}
 	}
 
+    /// Left image icon
+    public private(set) lazy var leftImageIcon = UIImage()
+    
     /// The custom insets for `placeholderLabel` relative to the text field.
 	public var placeholderInsets: UIEdgeInsets = .zero
 
@@ -128,10 +142,22 @@ open class TweePlaceholderTextField: UITextField {
 
 	private func initializeSetup() {
 		observe()
-
+        addLeftIcon()
 		configurePlaceholderLabel()
 	}
 
+    
+    private func addLeftIcon() {
+        
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: leftImageIcon.size.width, height: leftImageIcon.size.height))
+        imageView.image = leftImageIcon
+        imageView.contentMode = .scaleAspectFill
+        let seperatorView = UIView(frame: CGRect(x: 0, y: 0, width: imageView.frame.size.width + 10, height: imageView.frame.size.height))
+        seperatorView.addSubview(imageView)
+        self.leftView = seperatorView
+        self.leftViewMode = .always
+    }
+    
 	// Need to investigate and make code better.
 	private func configurePlaceholderLabel() {
 		placeholderLabel.textAlignment = textAlignment
